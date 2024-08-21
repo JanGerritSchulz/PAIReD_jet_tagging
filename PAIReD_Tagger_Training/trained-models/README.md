@@ -7,4 +7,4 @@ Here, we list a number of available pre-trained PAIReD taggers. The models can b
 | [PAIReDEllipse 3 [DY]](./PAIReDEllipse%203%20[DY]/)         | PF candidates (excl. PUPPI weight) | LL, CC, BB             | VH(cc), VH(bb), DY+jj                |
 | [PAIReDEllipse 3 SV [DY]](./PAIReDEllipse%203%20SV%20[DY]/)      | PF candidates + SVs                | LL, CC, BB             | VH(cc), VH(bb), DY+jj                |
 | [PAIReDEllipse 3 SV [DY+W+tt]](./PAIReDEllipse%203%20SV%20[DY+W+tt]/) | PF candidates + SVs                | LL, CC, BB             | VH(cc), VH(bb), DY+jj, W+jj, tt     |
-| [PAIReDEllipse 6 SV [DY+W+tt]](./PAIReDEllispe%206%20SV%20[DY+W+tt]/) | PF candidates + SVs                | ll, cl, bl, bb, CC, BB | VH(cc), VH(bb), DY+jj, W+jj, tt     |
+| [PAIReDEllipse 6 SV [DY+W+tt]](./PAIReDEllipse%206%20SV%20[DY+W+tt]/) | PF candidates + SVs                | ll, cl, bl, bb, CC, BB | VH(cc), VH(bb), DY+jj, W+jj, tt     |
