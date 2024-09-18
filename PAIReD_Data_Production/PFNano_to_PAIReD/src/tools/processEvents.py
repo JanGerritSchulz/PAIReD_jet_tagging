@@ -24,7 +24,6 @@ import vector
 from tools.branchnames import BranchNames
 from tools.helpers import isoLeptonCut, deltaPhi, getJetClusterIndex
 from tools.getMCInfo import getMCInfo
-from tools.PAIReD_geometries.ellipse import isInPAIReD
 
 
 
