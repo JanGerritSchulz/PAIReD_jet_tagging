@@ -9,7 +9,13 @@ pip install captum
 ```
 Then, run with something like this:
 ```bash
-python evaluate_feature_importance.py path/to/model_state.pt --network-config path/to/network/config.py --data-config path/to/data/config.yaml --datafile path/to/sample/PAIReD/data/file/PAIReD_VHcc.root --Njets 100 --selection "(label_CC==1)&(MC_vector_flav!=15)" --target label_CC
+python evaluate_feature_importance.py path/to/model_state.pt \
+--network-config path/to/network/config.py \
+--data-config path/to/data/config.yaml \
+--datafile path/to/sample/PAIReD/data/file/PAIReD_VHcc.root \
+--Njets 100 \
+--selection "(label_CC==1)&(MC_vector_flav!=15)" \
+--target label_CC
 ```
 
 **Example:**
