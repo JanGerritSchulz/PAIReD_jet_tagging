@@ -1,0 +1,307 @@
+treename: tree
+selection: (~(MC_vector_flav==15)) & ((MC_higgs_flav==0) ^ ((label_cc==1) | (label_bb==1)))
+test_time_selection: null
+preprocess:
+  method: manual
+  data_fraction: null
+  params: null
+new_variables:
+  part_mask: ak.ones_like(part_energy)
+  part_pt_log: np.where(np.isnan(np.log(part_pt)), -1e3, np.log(part_pt))
+  part_e_log: np.where(np.isnan(np.log(part_energy)), -1e3, np.log(part_energy))
+  jet1_rawenergy: jet1_energy * (1-jet1_rawfactor)
+  jet2_rawenergy: jet2_energy * (1-jet2_rawfactor)
+  jet1_rawpt: jet1_pt * (1-jet1_rawfactor)
+  jet2_rawpt: jet2_pt * (1-jet2_rawfactor)
+  part_logptrel: np.where(np.isnan(np.log(part_pt/(jet1_rawpt+jet2_rawpt))), -1e3,
+    np.log(part_pt/(jet1_rawpt+jet2_rawpt)))
+  part_logerel: np.where(np.isnan(np.log(part_energy/(jet1_rawenergy+jet2_rawenergy))),
+    -1e3, np.log(part_energy/(jet1_rawenergy+jet2_rawenergy)))
+  part_deltaR1: np.hypot(part_deta1, part_dphi1)
+  part_deltaR2: np.hypot(part_deta2, part_dphi2)
+  part_d0: np.where(part_d0val==-1, -1.5, np.tanh(part_d0val))
+  part_dz: np.where(part_dzval==-1, -1.5, np.tanh(part_dzval))
+  sv_px: np.cos(sv_phi) * sv_pt
+  sv_py: np.sin(sv_phi) * sv_pt
+  sv_pz: np.sinh(sv_eta) * sv_pt
+  sv_energy: np.sqrt(sv_mass**2 + (sv_pt*np.cosh(sv_eta))**2)
+  sv_mask: ak.ones_like(sv_pt)
+  class_WpHcc: (MC_physics_process==1)
+  class_WmHcc: (MC_physics_process==2)
+  class_ZHcc: (MC_physics_process==3)
+  class_WpHbb: (MC_physics_process==11)
+  class_WmHbb: (MC_physics_process==12)
+  class_ZHbb: (MC_physics_process==13)
+  class_DY: (MC_physics_process==23)
+  _label_: np.argmax(np.stack([label_BB,label_CC,label_LL], axis=1), axis=1)
+  _labelcheck_: np.sum(np.stack([label_BB,label_CC,label_LL], axis=1), axis=1)
+inputs:
+  pf_features:
+    length: 128
+    pad_mode: wrap
+    vars:
+      - [part_pt_log, 1., 0.25]
+      - [part_e_log, 2.0, 0.25]
+      - [part_logptrel, -4.7, 0.25]
+      - [part_logerel, -4.7, 0.25]
+      - [part_deltaR1, null]
+      - [part_deltaR2, null]
+      - [part_charge, null]
+      - [part_d0, null]
+      - [part_d0err, 0, 1, 0, 1]
+      - [part_dz, null]
+      - [part_dzerr, 0, 1, 0, 1]
+      - [part_deta1, null]
+      - [part_dphi1, null]
+      - [part_deta2, null]
+      - [part_dphi2, null]
+      - [part_puppiweight, null]
+  pf_vectors:
+    length: 128
+    pad_mode: wrap
+    vars:
+    - - part_px
+      - null
+    - - part_py
+      - null
+    - - part_pz
+      - null
+    - - part_energy
+      - null
+  pf_mask:
+    length: 128
+    pad_mode: constant
+    vars:
+    - part_mask
+  sv_features:
+    length: 10
+    pad_mode: wrap
+    vars:
+      - sv_charge
+      - [sv_chi2, 0, 0.25]
+      - [sv_dlen, 0, 0.05]
+      - [sv_dlenSig, 0, 0.01]
+      - [sv_dxy, 0, 0.05]
+      - [sv_dxySig, 0, 0.01]
+      - sv_eta
+      - [sv_mass, 0, 0.1]
+      - [sv_ndof, 0, 0.1]
+      - [sv_ntracks, 0, 0.1]
+      - [sv_pAngle, 0, 0.33]
+      - sv_phi
+      - [sv_pt, 0, 0.01]
+      - [sv_x, 0, 0.2]
+      - [sv_y, 0, 0.2]
+      - [sv_z, 0, 0.2]
+      - sv_deta1
+      - sv_deta2
+      - sv_dphi1
+      - sv_dphi2
+  sv_vectors:
+    length: 10
+    pad_mode: wrap
+    vars:
+    - - sv_px
+      - null
+    - - sv_py
+      - null
+    - - sv_pz
+      - null
+    - - sv_energy
+      - null
+  sv_mask:
+    length: 10
+    pad_mode: constant
+    vars:
+    - sv_mask
+labels:
+  type: simple
+  value:
+  - label_BB
+  - label_CC
+  - label_LL
+observers:
+- event
+- genweight
+- jet1_eta
+- jet1_phi
+- jet2_eta
+- jet2_phi
+- jet1_nparticles
+- jet2_nparticles
+- dijet_nparticles
+- dijet_eta
+- dijet_phi
+- dijet_pt
+- dijet_mass
+- dijet_index
+- MC_higgs_pt
+- MC_higgs_eta
+- MC_higgs_phi
+- MC_higgs_mass
+- MC_higgs_flav
+- MC_vector_flav
+- MC_lepton_channel
+- label_bb
+- label_cc
+- label_ll
+- label_cl
+- label_bl
+- label_LL
+- label_CC
+- label_BB
+monitor_variables: []
+weights:
+  use_precomputed_weights: false
+  reweight_method: ref
+  reweight_vars:
+    MC_higgs_pt:
+    - 0.0
+    - 20.0
+    - 40.0
+    - 60.0
+    - 80.0
+    - 100.0
+    - 120.0
+    - 140.0
+    - 160.0
+    - 180.0
+    - 200.0
+    - 220.0
+    - 240.0
+    - 260.0
+    - 280.0
+    - 300.0
+    MC_higgs_mass:
+    - -100000
+    - 100000
+  reweight_threshold: 0.1
+  reweight_classes:
+  - class_WpHcc
+  - class_WmHcc
+  - class_ZHcc
+  - class_WpHbb
+  - class_WmHbb
+  - class_ZHbb
+  - class_DY
+  class_weights:
+  - 0.33
+  - 0.33
+  - 0.33
+  - 0.33
+  - 0.33
+  - 0.33
+  - 1.0
+  reweight_hists:
+    class_WpHcc:
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    - - 0.0334148034453392
+    class_WmHcc:
+    - - 0.024523818865418434
+    - - 0.02509494498372078
+    - - 0.02516954205930233
+    - - 0.02589458040893078
+    - - 0.02657325379550457
+    - - 0.027115117758512497
+    - - 0.027751324698328972
+    - - 0.029237817972898483
+    - - 0.02894817851483822
+    - - 0.03048916906118393
+    - - 0.0310471523553133
+    - - 0.03122500143945217
+    - - 0.03290051966905594
+    - - 0.033801011741161346
+    - - 0.03440412878990173
+    class_ZHcc:
+    - - 0.04983261227607727
+    - - 0.05026957020163536
+    - - 0.04964352399110794
+    - - 0.05069876089692116
+    - - 0.05049119517207146
+    - - 0.05058561637997627
+    - - 0.0511324480175972
+    - - 0.05355948582291603
+    - - 0.05175570398569107
+    - - 0.05479547753930092
+    - - 0.0548698715865612
+    - - 0.05475848913192749
+    - - 0.05665997415781021
+    - - 0.05574820190668106
+    - - 0.057009343057870865
+    class_WpHbb:
+    - - 0.06002973020076752
+    - - 0.061123210936784744
+    - - 0.060523759573698044
+    - - 0.06082690507173538
+    - - 0.05860777944326401
+    - - 0.0556035153567791
+    - - 0.05391346290707588
+    - - 0.05255773663520813
+    - - 0.04989103600382805
+    - - 0.04896979779005051
+    - - 0.0488402284681797
+    - - 0.047853074967861176
+    - - 0.04823439195752144
+    - - 0.04778553545475006
+    - - 0.04735647886991501
+    class_WmHbb:
+    - - 0.05538177117705345
+    - - 0.05629372224211693
+    - - 0.0569397434592247
+    - - 0.05748867616057396
+    - - 0.056729547679424286
+    - - 0.05553536117076874
+    - - 0.055177267640829086
+    - - 0.0561552532017231
+    - - 0.054439742118120193
+    - - 0.05611913651227951
+    - - 0.05669274553656578
+    - - 0.056591544300317764
+    - - 0.05875556170940399
+    - - 0.057317182421684265
+    - - 0.05759667977690697
+    class_ZHbb:
+    - - 0.05495228245854378
+    - - 0.05605262517929077
+    - - 0.05564611777663231
+    - - 0.05511479452252388
+    - - 0.05319145694375038
+    - - 0.051596056669950485
+    - - 0.04980459064245224
+    - - 0.0502626895904541
+    - - 0.048224207013845444
+    - - 0.04897931218147278
+    - - 0.04746537283062935
+    - - 0.04809044674038887
+    - - 0.04914131015539169
+    - - 0.04944760352373123
+    - - 0.04792366921901703
+    class_DY:
+    - - 0.008706815540790558
+    - - 0.013758287765085697
+    - - 0.02099626138806343
+    - - 0.03255220502614975
+    - - 0.050638504326343536
+    - - 0.07718197256326675
+    - - 0.11545257270336151
+    - - 0.1706376075744629
+    - - 0.22974511981010437
+    - - 0.306826114654541
+    - - 0.3880518972873688
+    - - 0.5020867586135864
+    - - 0.6295517086982727
+    - - 0.7529975771903992
+    - - 0.8999999761581421
