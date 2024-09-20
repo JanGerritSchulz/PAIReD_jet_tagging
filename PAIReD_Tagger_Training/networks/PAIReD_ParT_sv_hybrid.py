@@ -96,7 +96,6 @@ class HybridLoss(torch.nn.L1Loss):
         self.factor_err = factor_err
 
     def forward(self, input_cls: Tensor, input_reg: Tensor, input_err_plus: Tensor, input_err_minus: Tensor, target_cls: Tensor, target_reg: Tensor) -> Tensor:
-        target_reg = target_reg + 20*torch.randn_like(target_reg)
         loss_cls = self.loss_cls_fn(input_cls, target_cls)
         loss_reg = self.loss_reg_fn(input_reg, target_reg, (target_cls <= 1))
         loss_err = self.loss_err_fn_plus(input_err_plus, target_reg, (target_cls <= 1)) + self.loss_err_fn_minus(input_err_minus, target_reg, (target_cls <= 1))
