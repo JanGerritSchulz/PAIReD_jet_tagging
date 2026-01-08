@@ -153,7 +153,7 @@ def processEvents(Events, physics_process=0, PAIReD_geometry="Ellipse"):
                     "E":  ak.sum(Part4.E, axis=2)})
     
     # get indices of the particles in one of the AK4 jets
-    s = ak.local_index(Part["pt"], axis=2)[(Part["in_jet1"]) & (Part["in_jet2"])]
+    s = ak.local_index(Part["pt"], axis=2)[(Part["in_jet1"]) | (Part["in_jet2"])]
     # get indices of the particles in no jet
     s = ak.concatenate([s, ak.local_index(Part["pt"], axis=2)[(~Part["in_jet1"]) & (~Part["in_jet2"])]], axis=2)
     # bring particles clustered to the seed jets to the front of the list
