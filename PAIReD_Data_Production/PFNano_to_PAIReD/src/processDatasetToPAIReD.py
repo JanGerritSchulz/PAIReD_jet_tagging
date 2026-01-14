@@ -110,7 +110,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--batchsize", default="100 MB", help="Size of the batches of events that are handled simultaneously (default is '100 MB'). Can be an integer (=number of events) or a string (specifying the data size, e.g. '100 MB')")
     parser.add_argument("-u", "--N-update", type=int, default=10, help="Number of batches processed before printing an update in the terminal: e.g., 'process event batch 10 of 15' (default is 10)")
     parser.add_argument("-n", "--N-files", type=int, default=-1,  help="Number of files to be processed. -1 means all (default is -1)")
-    parser.add_argument("--start-file", type=int, default=1,  help="Index of first file to be processed (default is 0)")
+    parser.add_argument("--start-file", type=int, default=0,  help="Index of first file to be processed (default is 0)")
     parser.add_argument("-e", "--N-events", type=int, default=-1,  help="Number of events to be processed per file. -1 means all (default is -1)")
     parser.add_argument("-t", "--N-threads", type=int, default=1,  help="Number of threads (default is 1)")
     parser.add_argument("--physicsprocess", type=int, default=0,  help="Integer indicating the physics process. Default is 0.")
